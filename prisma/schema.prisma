@@ -1,0 +1,157 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum DeleteStatus {
+  DELETED
+}
+
+model admin_users {
+  id                BigInt   @id @default(autoincrement()) @map("id") // 主键
+  nickname          String   @db.VarChar(20) // 昵称
+  email             String   @db.VarChar(255) // 邮箱
+  avatar            String   @db.VarChar(255) // 头像地址
+  company_id        String   @db.VarChar(255) // 企业微信用户ID
+  role              Int      @db.TinyInt // 权限1超级管理员2普通管理员
+  status            Int      @default(1) @db.TinyInt // 状态1正常2封禁
+  create_time       DateTime @updatedAt @db.DateTime // 创建时间
+  modify_time       DateTime @updatedAt @db.DateTime // 修改时间
+  modifier_id       BigInt   @db.BigInt // 修改人
+  modifier_nickname String   @db.VarChar(20) // 修改人名称
+  modifier_avatar   String   @db.VarChar(255) // 修改人头像
+  is_deleted        Int      @default(0) @db.TinyInt // 是否删除1是0否
+
+  @@map("admin_users")
+}
+
+model articles {
+  id              BigInt   @id @default(autoincrement()) @map("id") // 主键
+  title           String   @db.VarChar(100) // 文章标题
+  author_id       BigInt   @db.BigInt // 作者ID
+  author_nickname String   @db.VarChar(20) // 作者昵称
+  content         String   @db.LongText // 文章内容
+  click_count     Int      @default(0) @db.Int // 点击数
+  comment_count   Int      @default(0) @db.Int // 评论数
+  like_count      Int      @default(0) @db.Int // 点赞数
+  widget          Int      @default(0) @db.Int // 权重
+  create_time     DateTime @updatedAt @db.DateTime // 创建时间
+  modify_time     DateTime @db.DateTime // 修改时间
+  is_deleted      Int      @default(0) @db.TinyInt // 是否删除1是0否
+  status          Int      @default(1) @db.TinyInt // 状态1草稿2审核中3正常4禁用
+
+  @@map("articles")
+}
+
+model category {
+  id                BigInt   @id @default(autoincrement()) @map("id") // 主键
+  name              String   @db.VarChar(10) // 分类名称
+  widget            Int      @db.Int // 权重
+  status            Int      @default(1) @db.TinyInt // 状态1正常2封禁
+  create_time       DateTime @updatedAt @db.DateTime // 创建时间
+  modify_time       DateTime @updatedAt @db.DateTime // 修改时间
+  founder           BigInt   @db.BigInt // 创建人
+  founder_avatar    String   @db.VarChar(255) // 创建人头像
+  founder_nickname  String   @db.VarChar(20) // 创建人昵称
+  modifier          BigInt   @db.BigInt // 修改人
+  modifier_avatar   String   @db.VarChar(255) // 修改人头像
+  modifier_nickname String   @db.VarChar(20) // 修改人昵称
+  is_deleted        Int      @default(0) @db.TinyInt // 是否删除1是0否
+  description       String?  @db.VarChar(100) // 描述
+
+  @@map("category")
+}
+
+model comments {
+  id              BigInt   @id @default(autoincrement()) @map("id") // 主键
+  content         String   @db.Text // 评论内容
+  author_id       BigInt   @db.BigInt // 作者ID
+  author_nickname String   @db.VarChar(50) // 作者昵称
+  author_avatar   String   @db.VarChar(255) // 作者头像
+  article_id      BigInt   @db.BigInt // 文章ID
+  create_time     DateTime @updatedAt @db.DateTime // 发布时间
+  is_deleted      Int      @default(0) @db.TinyInt // 是否删除1是0否
+
+  @@map("comments")
+}
+
+model replies {
+  id              BigInt   @id @default(autoincrement()) @map("id") // 主键
+  content         String   @db.Text // 评论内容
+  author_id       BigInt   @db.BigInt // 作者ID
+  author_nickname String   @db.VarChar(50) // 作者昵称
+  author_avatar   String   @db.VarChar(255) // 作者头像
+  article_id      BigInt   @db.BigInt // 文章ID
+  create_time     DateTime @updatedAt @db.DateTime // 发布时间
+  is_deleted      Int      @default(0) @db.TinyInt // 是否删除1是0否
+  reply_id        BigInt   @db.BigInt // 回复ID
+
+  @@map("replies")
+}
+
+model notices {
+  id              BigInt   @id @default(autoincrement()) @map("id") // 主键
+  action          String   @db.VarChar(10) // 动作类型：like点赞、at@、reply回复
+  source_id       BigInt   @db.BigInt // 事件源ID：评论ID、文章ID
+  source_type     Int      @db.TinyInt // 事件源类型:1评论2文章
+  source_content  String   @db.VarChar(255) // 事件源内容
+  url             String   @db.VarChar(255) // 事件源地址
+  state           Int      @default(0) @db.TinyInt // 是否已读1是0否
+  sender_id       BigInt   @db.BigInt // 操作者ID
+  sender_nickname String   @db.VarChar(20) // 操作者昵称
+  sender_avatar   String   @db.VarChar(255) // 操作者头像
+  recipient_id    BigInt   @db.BigInt // 接收者ID
+  remind_time     DateTime @db.DateTime // 提醒事件
+  create_time     DateTime @updatedAt @db.DateTime // 创建时间
+  is_deleted      Int      @default(0) @db.TinyInt // 是否删除1是0否
+
+  @@map("notices")
+}
+
+model resources {
+  id                BigInt   @id @default(autoincrement()) @map("id") // 主键
+  name              String   @db.VarChar(50) // 资源名称
+  title             String   @db.VarChar(255) // 资源标题
+  description       String   @db.VarChar(255) // 资源简介
+  category_id       BigInt   @db.BigInt // 分类ID
+  category_status   Int      @default(1) @db.TinyInt // 状态1正常2封禁
+  category_name     String   @db.VarChar(10) // 分类名称
+  widget            Int      @default(0) @db.Int // 权重
+  status            Int      @default(1) @db.TinyInt // 状态1待审核2正常3禁用
+  create_time       DateTime @updatedAt @db.DateTime // 创建时间
+  modif_time        DateTime @updatedAt @db.DateTime // 修改时间
+  founder           BigInt   @db.BigInt // 创建人
+  founder_avatar    String   @db.VarChar(255) // 创建人头像
+  founder_nickname  String   @db.VarChar(20) // 创建人昵称
+  modifier          BigInt   @db.BigInt // 修改人
+  modifier_nickname String   @db.VarChar(20) // 修改人名称
+  modifier_avatar   String   @db.VarChar(255) // 修改人头像
+  url               String   @db.VarChar(255) // 资源地址
+  cover             String   @db.VarChar(255) // 资源图片
+  is_deleted        Int      @default(0) @db.TinyInt // 是否删除1是0否
+
+  @@map("resources")
+}
+
+model users {
+  id           BigInt   @id @default(autoincrement()) @map("id") // 主键
+  clerk_id     String   @db.VarChar(20) // clerk id
+  email        String   @db.VarChar(255) // 邮箱
+  avatar       String   @db.VarChar(255) // 用户头像
+  nickname     String   @db.VarChar(20) // 用户昵称
+  create_time  DateTime @updatedAt @db.DateTime // 创建时间
+  modify_time  DateTime @updatedAt @db.DateTime // 修改时间
+  sign_up_time DateTime @db.DateTime // 实际注册时间
+  modifier     BigInt   @db.BigInt // 修改人
+  is_deleted   Int      @default(0) @db.TinyInt // 是否删除1是0否
+  status       Int      @default(1) @db.TinyInt // 用户状态1正常2封禁
+
+  @@map("users")
+}
