@@ -13,7 +13,7 @@ export async function GET(request: Request) {
             company_id: userid
         }
     })
-    const redirect_uri = result ? "http://www.asynctodo.com/dashboard" : `http://www.asynctodo.com/sign-up/${userid}`
+    const redirect_uri = result ? "https://test-admin.peifang.app/dashboard" : `https://test-admin.peifang.app/sign-up/${userid}`
     const response = NextResponse.redirect(redirect_uri, { status: 302 });
     if (result) {
         setUserCookie(response, {

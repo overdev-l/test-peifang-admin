@@ -8,7 +8,7 @@ export function createWWLoginPanel(el: string) {
             login_type: ww.WWLoginType.corpApp,
             appid: process.env.NEXT_PUBLIC_COMPANY_WECHAT_CORP_ID as string,
             agentid: process.env.NEXT_PUBLIC_COMPANY_WECHAT_APP_ID as string,
-            redirect_uri: "http://www.asynctodo.com/api/auth",
+            redirect_uri: "https://test-admin.peifang.app/api/auth",
             panel_size: ww.WWLoginPanelSizeType.small
         },
     })

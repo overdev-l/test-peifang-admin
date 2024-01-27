@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const data = searchParams.get('data')
     let redirect_uri
     if (data) {
-        redirect_uri = "http://www.asynctodo.com/dashboard"
+        redirect_uri = "https://test-admin.peifang.app/dashboard"
         const response = NextResponse.redirect(redirect_uri, { status: 302 });
         const result = JSON.parse(data) as z.infer<typeof formSchema>
         const info = {
@@ -38,7 +38,7 @@ export async function GET(request: Request) {
         })
         return response
     } else {
-        redirect_uri = `http://www.asynctodo.com/sign-in`
+        redirect_uri = `https://test-admin.peifang.app/sign-in`
         const response = NextResponse.redirect(redirect_uri, { status: 302 });
         return response
     }

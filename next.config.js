@@ -2,7 +2,7 @@
 const nextConfig = {
     experimental: {
         serverActions: {
-            allowedOrigins: ['www.asynctodo.com']
+            allowedOrigins: ['test-admin.peifang.app']
         }
     },
     images: {

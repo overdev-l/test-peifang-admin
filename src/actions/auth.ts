@@ -10,7 +10,7 @@ import { setUserCookie } from "@/lib/auth"
 
 export const getCompanyPath = async () => {
     const id = await setAuthCache()
-    const redirectUrl = `https://www.asynctodo.com/auth?id=${id}`
+    const redirectUrl = `https://test-admin.peifang.app/auth?id=${id}`
     const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${process.env.NEXT_PUBLIC_COMPANY_WECHAT_CORP_ID}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&scope=snsapi_privateinfo&state=STATE&agentid=${process.env.NEXT_PUBLIC_COMPANY_WECHAT_APP_ID}#wechat_redirect`
     return {
         id,
